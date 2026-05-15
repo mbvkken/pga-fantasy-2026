@@ -15,7 +15,7 @@ export function LeaderboardClient({
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-800/20 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-200/70">
         <p>
-          Lower points wins · Best 5 of 7 · MC/WD/DQ = 75 · Updates every 30s
+          Lower points wins · Best 5 of 7 · MC/WD/DQ or worse than 67th = 75 · Updates every 30s
         </p>
         <button
           type="button"

@@ -5,7 +5,8 @@ Live leaderboard for the office PGA Championship fantasy pool (~21 players, 7 pi
 **Rules encoded in the app**
 
 - Points = finish position (T3 → 3)
-- Missed cut, WD, and DQ → 75 points
+- Missed cut, WD, DQ, or **worse than 67th** → 75 points
+- Positions use standard golf ties (T3 counts as 3)
 - Team total = sum of the **5 lowest** golfer point totals
 - Lower total wins
 

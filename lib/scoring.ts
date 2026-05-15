@@ -1,6 +1,8 @@
 import type { GolferStatus, PickResult } from "./types";
 
 export const PENALTY_POINTS = 75;
+/** Positions worse than this count as 75 points (per league spreadsheet). */
+export const POSITION_CAP = 67;
 
 export function parsePosition(value: unknown): number | null {
   if (value === null || value === undefined) return null;
@@ -44,8 +46,9 @@ export function pointsForGolfer(
   if (status === "cut" || status === "wd" || status === "dq") {
     return PENALTY_POINTS;
   }
-  if (position !== null) return position;
-  return null;
+  if (position === null) return null;
+  if (position > POSITION_CAP) return PENALTY_POINTS;
+  return position;
 }
 
 export function computeTeamTotal(pickPoints: Array<number | null>): {

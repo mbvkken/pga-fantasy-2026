@@ -151,10 +151,11 @@ function mapCompetitor(
       ? null
       : parsePosition(espnPosition);
 
+  // Prefer score-derived tie position; ESPN status position is often stale or wrong mid-event.
   const position =
     status === "cut" || status === "wd" || status === "dq"
       ? null
-      : (parsedEspnPosition ?? positionInfo?.position ?? null);
+      : (positionInfo?.position ?? parsedEspnPosition ?? null);
 
   const positionDisplay =
     status === "cut"
@@ -163,7 +164,7 @@ function mapCompetitor(
         ? "WD"
         : status === "dq"
           ? "DQ"
-          : (espnPosition ?? positionInfo?.positionDisplay ?? null);
+          : (positionInfo?.positionDisplay ?? espnPosition ?? null);
 
   const rounds = competitor.linescores ?? [];
   const currentRound = rounds.length > 0 ? rounds[rounds.length - 1] : null;
