@@ -1,0 +1,280 @@
+{
+  "tournament": "PGA Championship 2026",
+  "importedAt": "2026-05-15T00:00:00.000Z",
+  "source": "PGA Championship 2026 Chosen 7 - Før start.xlsx",
+  "participants": [
+    {
+      "id": "alexander-saaf",
+      "name": "Alexander Sääf",
+      "picks": [
+        { "group": 1, "golfer": "Ludvig Aberg" },
+        { "group": 2, "golfer": "Alex Noren" },
+        { "group": 3, "golfer": "Justin Rose" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "Wyndham Clark" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Mikael Lindberg" }
+      ]
+    },
+    {
+      "id": "anders-kihle",
+      "name": "Anders Kihle",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Min Woo Lee" },
+        { "group": 3, "golfer": "Patrick Reed" },
+        { "group": 4, "golfer": "Aaron Rai" },
+        { "group": 5, "golfer": "Sudarshan Yellamaraju" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Dustin Johnson" }
+      ]
+    },
+    {
+      "id": "andreas-hetland",
+      "name": "Andreas Hetland",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Chris Gotterup" },
+        { "group": 3, "golfer": "Jacob Bridgeman" },
+        { "group": 4, "golfer": "Jason Day" },
+        { "group": 5, "golfer": "Brian Harman" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Haotong Li" }
+      ]
+    },
+    {
+      "id": "elisabeth-ree-hetland",
+      "name": "Elisabeth Ree Hetland",
+      "picks": [
+        { "group": 1, "golfer": "Ludvig Aberg" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Gary Woodland" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Rasmus Neergaard-Petersen" }
+      ]
+    },
+    {
+      "id": "erik-westeng",
+      "name": "Erik Westeng",
+      "picks": [
+        { "group": 1, "golfer": "Matt Fitzpatrick" },
+        { "group": 2, "golfer": "Nicolai Hojgaard" },
+        { "group": 3, "golfer": "Patrick Reed" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "Rasmus Hojgaard" },
+        { "group": 6, "golfer": "Max Homa" },
+        { "group": 7, "golfer": "Haotong Li" }
+      ]
+    },
+    {
+      "id": "fredrik-amundsen",
+      "name": "Fredrik Amundsen",
+      "picks": [
+        { "group": 1, "golfer": "Rory McIlroy" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Corey Conners" },
+        { "group": 5, "golfer": "Brian Harman" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "henrik-stenholt",
+      "name": "Henrik Stenholt",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Hideki Matsuyama" },
+        { "group": 3, "golfer": "Patrick Reed" },
+        { "group": 4, "golfer": "Corey Conners" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Taylor Pendrith" },
+        { "group": 7, "golfer": "Stephan Jaeger" }
+      ]
+    },
+    {
+      "id": "jarle-naesset",
+      "name": "Jarle Næsset",
+      "picks": [
+        { "group": 1, "golfer": "Ludvig Aberg" },
+        { "group": 2, "golfer": "Chris Gotterup" },
+        { "group": 3, "golfer": "Tyrrell Hatton" },
+        { "group": 4, "golfer": "Jason Day" },
+        { "group": 5, "golfer": "Sahith Theegala" },
+        { "group": 6, "golfer": "Andrew Novak" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "jonny-sorensen",
+      "name": "Jonny Sørensen",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Chris Gotterup" },
+        { "group": 3, "golfer": "Justin Rose" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "Sudarshan Yellamaraju" },
+        { "group": 6, "golfer": "Matt Wallace" },
+        { "group": 7, "golfer": "Rasmus Neergaard-Petersen" }
+      ]
+    },
+    {
+      "id": "kristian-hetland",
+      "name": "Kristian Hetland",
+      "picks": [
+        { "group": 1, "golfer": "Rickie Fowler" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Joaquin Niemann" },
+        { "group": 5, "golfer": "Ryo Hisatsune" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Dustin Johnson" }
+      ]
+    },
+    {
+      "id": "marianne-ottersen",
+      "name": "Marianne Ottersen",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Shane Lowry" },
+        { "group": 3, "golfer": "Justin Rose" },
+        { "group": 4, "golfer": "Jason Day" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Chris Kirk" },
+        { "group": 7, "golfer": "Haotong Li" }
+      ]
+    },
+    {
+      "id": "mathias-bakken",
+      "name": "Mathias Bakken",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Justin Rose" },
+        { "group": 4, "golfer": "Corey Conners" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Stephan Jaeger" }
+      ]
+    },
+    {
+      "id": "morten-bakken",
+      "name": "Morten Bakken",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "nicolai-aubert",
+      "name": "Nicolai Aubert",
+      "picks": [
+        { "group": 1, "golfer": "Xander Schauffele" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Tyrrell Hatton" },
+        { "group": 4, "golfer": "Joaquin Niemann" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "petter-hauger",
+      "name": "Petter Hauger",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Harry Hall" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "Brian Harman" },
+        { "group": 6, "golfer": "Max Homa" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "stian-lillethun",
+      "name": "Stian Lillethun",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Shane Lowry" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Joaquin Niemann" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Max Homa" },
+        { "group": 7, "golfer": "Dustin Johnson" }
+      ]
+    },
+    {
+      "id": "sunniva-bjornstad",
+      "name": "Sunniva Bjørnstad",
+      "picks": [
+        { "group": 1, "golfer": "Cameron Young" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "Michael Kim" },
+        { "group": 6, "golfer": "Max Homa" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "thomas-holla",
+      "name": "Thomas Holla",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Viktor Hovland" },
+        { "group": 3, "golfer": "Justin Thomas" },
+        { "group": 4, "golfer": "Gary Woodland" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Denny McCarthy" },
+        { "group": 7, "golfer": "Max Greyserman" }
+      ]
+    },
+    {
+      "id": "thor-anders-hovland",
+      "name": "Thor Anders Hovland",
+      "picks": [
+        { "group": 1, "golfer": "Scottie Scheffler" },
+        { "group": 2, "golfer": "Shane Lowry" },
+        { "group": 3, "golfer": "Kristoffer Reitan" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "J.T. Poston" },
+        { "group": 6, "golfer": "Max Homa" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "vegard-lyngvi-sand",
+      "name": "Vegard Lyngvi Sand",
+      "picks": [
+        { "group": 1, "golfer": "Matt Fitzpatrick" },
+        { "group": 2, "golfer": "Chris Gotterup" },
+        { "group": 3, "golfer": "Justin Rose" },
+        { "group": 4, "golfer": "Alex Fitzpatrick" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Marco Penge" }
+      ]
+    },
+    {
+      "id": "william-maurud",
+      "name": "William Maurud",
+      "picks": [
+        { "group": 1, "golfer": "Cameron Young" },
+        { "group": 2, "golfer": "Sam Burns" },
+        { "group": 3, "golfer": "Justin Thomas" },
+        { "group": 4, "golfer": "Jason Day" },
+        { "group": 5, "golfer": "Brooks Koepka" },
+        { "group": 6, "golfer": "Sungjae Im" },
+        { "group": 7, "golfer": "Max Greyserman" }
+      ]
+    }
+  ]
+}
