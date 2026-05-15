@@ -290,11 +290,12 @@ export async function fetchLiveLeaderboard(
     mapCompetitor(competitor, positions),
   );
 
+  const fetchedAt = Date.now();
   const result: ScoreCachePayload = {
     eventName: event.name ?? null,
-    lastUpdated: event.date ?? new Date().toISOString(),
+    lastUpdated: new Date(fetchedAt).toISOString(),
     golfers,
-    fetchedAt: Date.now(),
+    fetchedAt,
   };
 
   setCachedScores(result);

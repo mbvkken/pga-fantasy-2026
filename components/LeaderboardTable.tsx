@@ -11,16 +11,24 @@ function formatPoints(points: number | null): string {
 
 function formatUpdated(iso: string | null): string {
   if (!iso) return "Unknown";
-  try {
-    return new Date(iso).toLocaleString("en-US", {
-      day: "numeric",
-      month: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return iso;
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return iso;
+
+  const seconds = Math.max(0, Math.round((Date.now() - then) / 1000));
+  if (seconds < 10) return "just now";
+  if (seconds < 60) return `${seconds} seconds ago`;
+
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
   }
+
+  return new Date(iso).toLocaleString("en-US", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function rowStyles(rank: number): string {
