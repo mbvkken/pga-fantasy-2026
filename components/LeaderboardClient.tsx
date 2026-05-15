@@ -43,7 +43,7 @@ export function LeaderboardClient({
   return (
     <div>
       <div
-        className="mb-6 flex gap-1 rounded-xl border border-emerald-800/30 bg-emerald-950/50 p-1"
+        className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-emerald-800/30 bg-emerald-950/50 p-1"
         role="tablist"
         aria-label="Leaderboard views"
       >
@@ -54,7 +54,7 @@ export function LeaderboardClient({
             role="tab"
             aria-selected={tab === item.id}
             onClick={() => setTab(item.id)}
-            className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition sm:flex-none sm:px-5 ${
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition sm:px-5 ${
               tab === item.id
                 ? "bg-emerald-700/50 text-white shadow-sm"
                 : "text-emerald-200/70 hover:bg-emerald-900/40 hover:text-emerald-50"
@@ -63,44 +63,42 @@ export function LeaderboardClient({
             {item.label}
           </button>
         ))}
-      </div>
 
-      <div className="mb-6 flex flex-wrap items-center justify-end gap-2">
-        {tab === "fantasy" ? (
-          <div ref={rulesRef} className="relative">
-            <button
-              type="button"
-              onClick={() => setRulesOpen((open) => !open)}
-              aria-expanded={rulesOpen}
-              aria-controls={rulesId}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-emerald-600/40 bg-emerald-800/30 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-700/40"
-              title="Scoring rules"
-            >
-              i
-            </button>
-            {rulesOpen ? (
-              <div
-                id={rulesId}
-                role="dialog"
-                aria-label="Scoring rules"
-                className="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-emerald-700/50 bg-emerald-950 px-4 py-3 text-left text-sm leading-relaxed text-emerald-100/90 shadow-xl shadow-black/40 sm:w-80"
+        <div className="ml-auto flex items-center gap-2">
+          {tab === "fantasy" ? (
+            <div ref={rulesRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setRulesOpen((open) => !open)}
+                aria-expanded={rulesOpen}
+                aria-controls={rulesId}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-emerald-600/40 bg-emerald-800/30 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-700/40"
+                title="Scoring rules"
               >
-                <p className="font-medium text-emerald-50">How scoring works</p>
-                <p className="mt-2">{RULES_TEXT}</p>
-              </div>
-            ) : null}
-          </div>
-        ) : (
-          <span className="hidden sm:block" aria-hidden />
-        )}
-        <button
-          type="button"
-          onClick={() => void refresh(true)}
-          disabled={loading}
-          className="rounded-lg border border-emerald-600/40 bg-emerald-800/30 px-3 py-1.5 text-sm font-medium text-emerald-50 transition hover:bg-emerald-700/40 disabled:opacity-50"
-        >
-          {loading ? "Updating…" : "Refresh"}
-        </button>
+                i
+              </button>
+              {rulesOpen ? (
+                <div
+                  id={rulesId}
+                  role="dialog"
+                  aria-label="Scoring rules"
+                  className="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-emerald-700/50 bg-emerald-950 px-4 py-3 text-left text-sm leading-relaxed text-emerald-100/90 shadow-xl shadow-black/40 sm:w-80"
+                >
+                  <p className="font-medium text-emerald-50">How scoring works</p>
+                  <p className="mt-2">{RULES_TEXT}</p>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => void refresh(true)}
+            disabled={loading}
+            className="rounded-lg border border-emerald-600/40 bg-emerald-800/30 px-3 py-1.5 text-sm font-medium text-emerald-50 transition hover:bg-emerald-700/40 disabled:opacity-50"
+          >
+            {loading ? "Updating…" : "Refresh"}
+          </button>
+        </div>
       </div>
 
       {error ? (
