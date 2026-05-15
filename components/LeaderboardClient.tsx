@@ -43,28 +43,33 @@ export function LeaderboardClient({
   return (
     <div>
       <div
-        className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-emerald-800/30 bg-emerald-950/50 p-1"
-        role="tablist"
-        aria-label="Leaderboard views"
+        className="mb-6 flex flex-col gap-2 rounded-xl border border-emerald-800/30 bg-emerald-950/50 p-1 sm:flex-row sm:flex-wrap sm:items-center"
       >
-        {TABS.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={tab === item.id}
-            onClick={() => setTab(item.id)}
-            className={`rounded-lg px-3 py-2 text-sm font-medium transition sm:px-5 ${
-              tab === item.id
-                ? "bg-emerald-700/50 text-white shadow-sm"
-                : "text-emerald-200/70 hover:bg-emerald-900/40 hover:text-emerald-50"
-            }`}
-          >
-            {item.label}
-          </button>
-        ))}
+        <div
+          className="flex gap-1"
+          role="tablist"
+          aria-label="Leaderboard views"
+        >
+          {TABS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={tab === item.id}
+              onClick={() => setTab(item.id)}
+              className={`flex-1 rounded-lg px-2 py-2 text-sm font-medium transition sm:flex-none sm:px-5 ${
+                tab === item.id
+                  ? "bg-emerald-700/50 text-white shadow-sm"
+                  : "text-emerald-200/70 hover:bg-emerald-900/40 hover:text-emerald-50"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
 
-        <div className="ml-auto flex items-center gap-2">
+        </div>
+
+        <div className="flex items-center justify-end gap-2 border-t border-emerald-800/30 pt-2 sm:ml-auto sm:border-t-0 sm:pt-0">
           {tab === "fantasy" ? (
             <div ref={rulesRef} className="relative">
               <button
