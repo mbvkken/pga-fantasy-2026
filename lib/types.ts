@@ -25,7 +25,7 @@ export interface TeamsData {
 }
 
 export interface LiveGolferRow {
-  dgId: number | null;
+  espnId: string | null;
   name: string;
   position: number | null;
   positionDisplay: string | null;
@@ -39,7 +39,7 @@ export interface LiveGolferRow {
 export interface PickResult {
   group: number;
   golfer: string;
-  dgId: number | null;
+  espnId: string | null;
   position: number | null;
   positionDisplay: string | null;
   status: GolferStatus;
@@ -63,7 +63,7 @@ export interface LeaderboardResponse {
   tournament: string;
   eventName: string | null;
   lastUpdated: string | null;
-  dataSource: "datagolf" | "cached" | "unavailable";
+  dataSource: "espn" | "cached" | "unavailable";
   dataSourceMessage: string | null;
   standings: ParticipantStanding[];
 }

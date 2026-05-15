@@ -1,11 +1,11 @@
 import { buildPickResults, finalizeStandings } from "./scoring";
 import { getParticipants, getTeamsData } from "./teams";
-import { buildGolferLookup, getLiveScores, matchGolfer } from "./datagolf";
+import { buildGolferLookup, getLiveScores, matchGolfer } from "./espn";
 import type { LeaderboardResponse, LiveGolferRow, ParticipantStanding } from "./types";
 
 function emptyGolfer(name: string): LiveGolferRow {
   return {
-    dgId: null,
+    espnId: null,
     name,
     position: null,
     positionDisplay: null,
@@ -74,7 +74,7 @@ export async function buildLeaderboard(force = false): Promise<LeaderboardRespon
     tournament: teams.tournament,
     eventName: payload?.eventName ?? null,
     lastUpdated: payload?.lastUpdated ?? null,
-    dataSource: payload ? (error ? "cached" : "datagolf") : "unavailable",
+    dataSource: payload ? (error ? "cached" : "espn") : "unavailable",
     dataSourceMessage,
     standings,
   };

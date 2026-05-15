@@ -82,7 +82,7 @@ export function buildPickResults(
     return {
       group: pick.group,
       golfer: pick.golfer,
-      dgId: live?.dgId ?? null,
+      espnId: live?.espnId ?? null,
       position: live?.position ?? null,
       positionDisplay: live?.positionDisplay ?? null,
       status,

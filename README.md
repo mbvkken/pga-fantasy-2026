@@ -12,7 +12,7 @@ Live leaderboard for the office PGA Championship fantasy pool (~21 players, 7 pi
 ## Stack
 
 - [Next.js](https://nextjs.org) (TypeScript, App Router)
-- [DataGolf API](https://datagolf.com/api-access) for live positions
+- [ESPN public PGA scoreboard API](https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard) for live positions (free, no API key)
 - Hosted on [Vercel](https://vercel.com)
 
 ## Local development
@@ -21,13 +21,13 @@ Live leaderboard for the office PGA Championship fantasy pool (~21 players, 7 pi
 cd ~/pga-fantasy-2026
 npm install
 cp .env.example .env.local
-# Add DATAGOLF_API_KEY and CRON_SECRET to .env.local
+# Optional: set CRON_SECRET for testing the cron endpoint locally
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Without `DATAGOLF_API_KEY`, lineups still load but live positions show as unavailable.
+Live scores load automatically from ESPN during the PGA Championship.
 
 ## Import teams from Excel
 
@@ -37,16 +37,17 @@ npm run import:teams -- "/Users/bakken/Downloads/PGA Championship 2026 Chosen 7 
 
 Writes `data/teams.json`. Commit the updated file.
 
-If a golfer name does not match DataGolf, add an alias in `data/name-aliases.json`.
+If a golfer name does not match ESPN, add an alias in `data/name-aliases.json`.
 
 ## Deploy to Vercel
 
 1. Push this repo to [github.com/mbvkken/pga-fantasy-2026](https://github.com/mbvkken/pga-fantasy-2026)
 2. [vercel.com](https://vercel.com) → **Import** the GitHub repo
-3. **Environment variables** (Production + Preview):
-   - `DATAGOLF_API_KEY` — from DataGolf Scratch Plus
+3. **Environment variable** (Production + Preview):
    - `CRON_SECRET` — random string (`openssl rand -hex 32`)
 4. Deploy
+
+No paid API key is required.
 
 ## Refresh scores every minute
 
@@ -66,7 +67,7 @@ The public site polls `/api/leaderboard` every 60 seconds as well.
 |----------|-------------|
 | `GET /api/leaderboard` | Full leaderboard JSON |
 | `GET /api/leaderboard?force=1` | Bypass 60s server cache |
-| `GET /api/cron/refresh-scores?secret=…` | Warm DataGolf cache (cron only) |
+| `GET /api/cron/refresh-scores?secret=…` | Warm ESPN score cache (cron only) |
 
 ## Project structure
 
@@ -74,6 +75,6 @@ The public site polls `/api/leaderboard` every 60 seconds as well.
 app/              Pages and API routes
 components/       UI
 data/teams.json   Participant lineups
-lib/              Scoring, DataGolf client, leaderboard builder
+lib/              Scoring, ESPN client, leaderboard builder
 scripts/          Excel import
 ```
