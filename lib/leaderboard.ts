@@ -1,6 +1,7 @@
 import { buildPickResults, finalizeStandings } from "./scoring";
-import { getParticipants, getTeamsData } from "./teams";
+import { allPickedGolferNames, getParticipants, getTeamsData, normalizeNameKey } from "./teams";
 import { buildGolferLookup, getLiveScores, matchGolfer } from "./espn";
+import { sortTournamentField } from "./tournament";
 import type { LeaderboardResponse, LiveGolferRow, ParticipantStanding } from "./types";
 
 function emptyGolfer(name: string): LiveGolferRow {
@@ -70,6 +71,10 @@ export async function buildLeaderboard(force = false): Promise<LeaderboardRespon
       .join(" ");
   }
 
+  const pickedGolferKeys = [
+    ...new Set(allPickedGolferNames().map((name) => normalizeNameKey(name))),
+  ];
+
   return {
     tournament: teams.tournament,
     eventName: payload?.eventName ?? null,
@@ -77,5 +82,7 @@ export async function buildLeaderboard(force = false): Promise<LeaderboardRespon
     dataSource: payload ? (error ? "cached" : "espn") : "unavailable",
     dataSourceMessage,
     standings,
+    tournamentField: payload ? sortTournamentField(payload.golfers) : [],
+    pickedGolferKeys,
   };
 }

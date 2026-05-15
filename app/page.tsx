@@ -10,8 +10,8 @@ export default async function HomePage() {
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-6 sm:px-6 sm:py-10">
       <SiteHeader
-        title="Fantasy Leaderboard"
-        subtitle="Tap a player to see their 7 picks and live stats. Top 3 are on the podium."
+        title="PGA Championship 2026"
+        subtitle="Fantasy pool leaderboard and live PGA standings — updates every 30 seconds."
       />
       <LeaderboardClient initialData={leaderboard} />
       <footer className="mt-10 border-t border-emerald-900/30 pt-6 text-center text-sm text-emerald-200/50">

@@ -1,34 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { RankMedal } from "./RankMedal";
+import { formatRelativeUpdated } from "@/lib/format";
 import type { LeaderboardResponse, ParticipantStanding } from "@/lib/types";
+import { RankMedal } from "./RankMedal";
 
 function formatPoints(points: number | null): string {
   if (points === null) return "—";
   return String(points);
-}
-
-function formatUpdated(iso: string | null): string {
-  if (!iso) return "Unknown";
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return iso;
-
-  const seconds = Math.max(0, Math.round((Date.now() - then) / 1000));
-  if (seconds < 10) return "just now";
-  if (seconds < 60) return `${seconds} seconds ago`;
-
-  const minutes = Math.round(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
-  }
-
-  return new Date(iso).toLocaleString("en-US", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 function rowStyles(rank: number): string {
@@ -63,7 +42,7 @@ export function LeaderboardMeta({
         </span>
       </div>
       <p className="mt-2 text-sm text-emerald-200/60">
-        Updated {formatUpdated(data.lastUpdated)}
+        Updated {formatRelativeUpdated(data.lastUpdated)}
         {loading ? <span className="ml-2 text-emerald-400">· syncing…</span> : null}
       </p>
       {data.dataSourceMessage ? (

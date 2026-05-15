@@ -66,4 +66,8 @@ export interface LeaderboardResponse {
   dataSource: "espn" | "cached" | "unavailable";
   dataSourceMessage: string | null;
   standings: ParticipantStanding[];
+  /** Full PGA field sorted by tournament position. */
+  tournamentField: LiveGolferRow[];
+  /** Normalized names of golfers picked in the fantasy pool (for highlighting). */
+  pickedGolferKeys: string[];
 }
