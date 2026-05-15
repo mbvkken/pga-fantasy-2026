@@ -62,6 +62,23 @@ function parseScoreToPar(score: string | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+/** ESPN adds a placeholder linescore for the upcoming round before anyone tees off. */
+function hasStartedCurrentRound(competitor: EspnCompetitor): boolean {
+  const rounds = competitor.linescores ?? [];
+  const latest = rounds.length > 0 ? rounds[rounds.length - 1] : null;
+  if (!latest) return false;
+  if (latest.value !== undefined && latest.value !== null) return true;
+  if (
+    latest.displayValue !== undefined &&
+    latest.displayValue !== null &&
+    latest.displayValue !== ""
+  ) {
+    return true;
+  }
+  const holes = (latest as { linescores?: unknown[] }).linescores;
+  return Array.isArray(holes) && holes.length > 0;
+}
+
 function inferStatusFromEspn(competitor: EspnCompetitor): GolferStatus {
   const status = competitor.status;
   const positionDisplay = status?.position?.displayName ?? null;
@@ -70,6 +87,7 @@ function inferStatusFromEspn(competitor: EspnCompetitor): GolferStatus {
 
   const typeName = status?.type?.name?.toLowerCase() ?? "";
   const typeDesc = status?.type?.description?.toLowerCase() ?? "";
+  const typeState = status?.type?.state?.toLowerCase() ?? "";
   const display = (status?.displayValue ?? competitor.score ?? "").toUpperCase();
 
   if (
@@ -85,7 +103,15 @@ function inferStatusFromEspn(competitor: EspnCompetitor): GolferStatus {
   if (typeName.includes("complete") || typeName.includes("finished")) {
     return "finished";
   }
-  if (typeName.includes("scheduled") || typeName.includes("pre")) {
+  if (
+    typeState === "pre" ||
+    typeName.includes("scheduled") ||
+    typeName.includes("pre")
+  ) {
+    return "not_started";
+  }
+
+  if (!hasStartedCurrentRound(competitor)) {
     return "not_started";
   }
 
