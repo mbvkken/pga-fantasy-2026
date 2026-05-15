@@ -12,7 +12,7 @@ function formatPoints(points: number | null): string {
 function formatUpdated(iso: string | null): string {
   if (!iso) return "Unknown";
   try {
-    return new Date(iso).toLocaleString("nb-NO", {
+    return new Date(iso).toLocaleString("en-US", {
       day: "numeric",
       month: "short",
       hour: "2-digit",

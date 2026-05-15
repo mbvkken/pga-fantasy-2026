@@ -1,8 +1,12 @@
 "use client";
 
+import { useEffect, useId, useRef, useState } from "react";
 import { useLeaderboardPoll } from "@/lib/useLeaderboardPoll";
 import type { LeaderboardResponse } from "@/lib/types";
 import { LeaderboardMeta, LeaderboardTable } from "./LeaderboardTable";
+
+const RULES_TEXT =
+  "Lower points wins. Best 5 of 7 golfers count. Missed cut, WD, DQ, or worse than 67th place = 75 points. Leaderboard updates every 30 seconds.";
 
 export function LeaderboardClient({
   initialData,
@@ -10,18 +14,54 @@ export function LeaderboardClient({
   initialData: LeaderboardResponse;
 }) {
   const { data, loading, error, refresh } = useLeaderboardPoll(initialData);
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const rulesId = useId();
+  const rulesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!rulesOpen) return;
+
+    const onPointerDown = (event: MouseEvent) => {
+      if (rulesRef.current && !rulesRef.current.contains(event.target as Node)) {
+        setRulesOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [rulesOpen]);
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-800/20 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-200/70">
-        <p>
-          Lower points wins · Best 5 of 7 · MC/WD/DQ or worse than 67th = 75 · Updates every 30s
-        </p>
+      <div className="mb-6 flex flex-wrap items-center justify-end gap-2">
+        <div ref={rulesRef} className="relative">
+          <button
+            type="button"
+            onClick={() => setRulesOpen((open) => !open)}
+            aria-expanded={rulesOpen}
+            aria-controls={rulesId}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-emerald-600/40 bg-emerald-800/30 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-700/40"
+            title="Scoring rules"
+          >
+            i
+          </button>
+          {rulesOpen ? (
+            <div
+              id={rulesId}
+              role="dialog"
+              aria-label="Scoring rules"
+              className="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-emerald-700/50 bg-emerald-950 px-4 py-3 text-left text-sm leading-relaxed text-emerald-100/90 shadow-xl shadow-black/40 sm:w-80"
+            >
+              <p className="font-medium text-emerald-50">How scoring works</p>
+              <p className="mt-2">{RULES_TEXT}</p>
+            </div>
+          ) : null}
+        </div>
         <button
           type="button"
           onClick={() => void refresh(true)}
           disabled={loading}
-          className="shrink-0 rounded-lg border border-emerald-600/40 bg-emerald-800/30 px-3 py-1.5 text-sm font-medium text-emerald-50 transition hover:bg-emerald-700/40 disabled:opacity-50"
+          className="rounded-lg border border-emerald-600/40 bg-emerald-800/30 px-3 py-1.5 text-sm font-medium text-emerald-50 transition hover:bg-emerald-700/40 disabled:opacity-50"
         >
           {loading ? "Updating…" : "Refresh"}
         </button>
@@ -36,3 +76,4 @@ export function LeaderboardClient({
     </div>
   );
 }
+
