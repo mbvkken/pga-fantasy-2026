@@ -69,10 +69,12 @@ export function LeaderboardClient({
 
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-emerald-800/30 pt-2 sm:ml-auto sm:border-t-0 sm:pt-0">
+        <div
+          ref={rulesRef}
+          className="relative flex w-full items-center justify-center gap-2 border-t border-emerald-800/30 pt-2 sm:ml-auto sm:w-auto sm:justify-end sm:border-t-0 sm:pt-0"
+        >
           {tab === "fantasy" ? (
-            <div ref={rulesRef} className="relative">
-              <button
+            <button
                 type="button"
                 onClick={() => setRulesOpen((open) => !open)}
                 aria-expanded={rulesOpen}
@@ -97,17 +99,16 @@ export function LeaderboardClient({
                   <path d="M12 8h.01" />
                 </svg>
               </button>
-              {rulesOpen ? (
-                <div
-                  id={rulesId}
-                  role="dialog"
-                  aria-label="Scoring rules"
-                  className="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-emerald-700/50 bg-emerald-950 px-4 py-3 text-left text-sm leading-relaxed text-emerald-100/90 shadow-xl shadow-black/40 sm:w-80"
-                >
-                  <p className="font-medium text-emerald-50">How scoring works</p>
-                  <p className="mt-2">{RULES_TEXT}</p>
-                </div>
-              ) : null}
+          ) : null}
+          {rulesOpen && tab === "fantasy" ? (
+            <div
+              id={rulesId}
+              role="dialog"
+              aria-label="Scoring rules"
+              className="absolute left-1/2 top-full z-20 mt-2 w-[min(20rem,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-xl border border-emerald-700/50 bg-emerald-950 px-4 py-3 text-left text-sm leading-relaxed text-emerald-100/90 shadow-xl shadow-black/40 sm:left-auto sm:right-0 sm:w-80 sm:max-w-none sm:translate-x-0"
+            >
+              <p className="font-medium text-emerald-50">How scoring works</p>
+              <p className="mt-2">{RULES_TEXT}</p>
             </div>
           ) : null}
           <button
