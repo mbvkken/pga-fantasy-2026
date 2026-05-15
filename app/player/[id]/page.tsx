@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { PlayerPicksTable } from "@/components/PlayerPicksTable";
+import { PlayerDetailClient } from "@/components/PlayerDetailClient";
 import { buildLeaderboard } from "@/lib/leaderboard";
 import { getParticipantById } from "@/lib/teams";
 
@@ -20,7 +20,11 @@ export default async function PlayerPage({
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-8 sm:px-6">
-      <PlayerPicksTable standing={standing} />
+      <PlayerDetailClient
+        playerId={id}
+        initialStanding={standing}
+        initialLeaderboard={leaderboard}
+      />
     </main>
   );
 }
