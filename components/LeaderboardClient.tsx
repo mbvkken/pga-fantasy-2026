@@ -94,8 +94,24 @@ export function LeaderboardClient({
             type="button"
             onClick={() => void refresh(true)}
             disabled={loading}
-            className="rounded-lg border border-emerald-600/40 bg-emerald-800/30 px-3 py-1.5 text-sm font-medium text-emerald-50 transition hover:bg-emerald-700/40 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-600/40 bg-emerald-800/30 px-3 py-1.5 text-sm font-medium text-emerald-50 transition hover:bg-emerald-700/40 disabled:opacity-50"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`h-4 w-4 shrink-0 ${loading ? "animate-spin" : ""}`}
+              aria-hidden
+            >
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+              <path d="M8 16H3v5" />
+            </svg>
             {loading ? "Updating…" : "Refresh"}
           </button>
         </div>
