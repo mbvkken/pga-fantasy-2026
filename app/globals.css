@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #07150f;
+  --background: #050f0b;
   --foreground: #ecfdf5;
+  --card: rgba(6, 28, 20, 0.72);
+  --accent: #34d399;
+  --gold: #fbbf24;
+  --silver: #d4d4d8;
+  --bronze: #d97706;
 }
 
 @theme inline {
@@ -16,4 +21,30 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(6, 78, 59, 0.2), transparent),
+    linear-gradient(180deg, #050f0b 0%, #07150f 40%, #050a08 100%);
+  pointer-events: none;
+}
+
+@keyframes pulse-live {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.live-dot {
+  animation: pulse-live 2s ease-in-out infinite;
 }

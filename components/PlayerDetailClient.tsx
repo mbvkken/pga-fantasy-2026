@@ -23,12 +23,11 @@ export function PlayerDetailClient({
 
   return (
     <div>
-      <p className="mb-4 text-sm text-emerald-200/70">
-        Updates automatically every 30 seconds
-        {loading ? <span className="ml-2 text-emerald-400">· Updating…</span> : null}
-      </p>
+      {loading ? (
+        <p className="mb-4 text-sm text-emerald-400">Syncing live scores…</p>
+      ) : null}
       {error ? (
-        <p className="mb-4 rounded-lg border border-red-800/50 bg-red-950/40 px-3 py-2 text-sm text-red-200">
+        <p className="mb-4 rounded-xl border border-red-800/50 bg-red-950/40 px-4 py-2.5 text-sm text-red-200">
           {error}
         </p>
       ) : null}
@@ -36,4 +35,3 @@ export function PlayerDetailClient({
     </div>
   );
 }
-
