@@ -26,13 +26,20 @@ interface EspnCompetitorStatus {
   displayValue?: string;
 }
 
+interface EspnLinescoreRound {
+  period?: number;
+  value?: number;
+  displayValue?: string;
+  linescores?: Array<unknown>;
+}
+
 interface EspnCompetitor {
   id?: string;
   order?: number;
   athlete?: EspnAthlete;
   score?: string;
   status?: EspnCompetitorStatus;
-  linescores?: Array<{ period?: number; value?: number; displayValue?: string }>;
+  linescores?: EspnLinescoreRound[];
 }
 
 interface EspnScoreboard {
@@ -41,8 +48,46 @@ interface EspnScoreboard {
     name?: string;
     date?: string;
     status?: { type?: { state?: string; description?: string } };
-    competitions?: Array<{ competitors?: EspnCompetitor[] }>;
+    competitions?: Array<{
+      status?: { period?: number };
+      competitors?: EspnCompetitor[];
+    }>;
   }>;
+}
+
+function currentEventPeriod(event: NonNullable<EspnScoreboard["events"]>[0]): number | null {
+  const period = event.competitions?.[0]?.status?.period;
+  if (typeof period === "number" && Number.isFinite(period) && period > 0) {
+    return period;
+  }
+  return null;
+}
+
+function linescoreForPeriod(
+  rounds: EspnLinescoreRound[] | undefined,
+  period: number | null,
+): EspnLinescoreRound | null {
+  if (!rounds || period === null) return null;
+  return rounds.find((r) => r.period === period) ?? null;
+}
+
+/** ESPN appends a bare `{ period: N }` row for the next round before it starts. */
+function isBarePeriodPlaceholder(round: EspnLinescoreRound): boolean {
+  const keys = Object.keys(round).filter((k) => round[k as keyof EspnLinescoreRound] !== undefined);
+  return keys.length === 1 && keys[0] === "period";
+}
+
+function roundHasLiveActivity(round: EspnLinescoreRound): boolean {
+  const holes = round.linescores;
+  if (Array.isArray(holes) && holes.length > 0) return true;
+  const dv = String(round.displayValue ?? "").trim();
+  return dv.length > 0 && dv !== "-";
+}
+
+function parseRoundRelativeToPar(displayValue: string | undefined): number | null {
+  const raw = String(displayValue ?? "").trim();
+  if (!raw || raw === "-" || raw === "—") return null;
+  return parseScoreToPar(raw);
 }
 
 function parseScoreToPar(score: string | undefined): number | null {
@@ -62,24 +107,33 @@ function parseScoreToPar(score: string | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-/** ESPN adds a placeholder linescore for the upcoming round before anyone tees off. */
-function hasStartedCurrentRound(competitor: EspnCompetitor): boolean {
+/**
+ * Whether the golfer has begun the tournament round that matches ESPN's
+ * competition `status.period`. We must not use `linescores.at(-1)` because ESPN
+ * appends a future-round placeholder row after the live round.
+ */
+function hasStartedCurrentRound(
+  competitor: EspnCompetitor,
+  eventPeriod: number | null,
+): boolean {
   const rounds = competitor.linescores ?? [];
-  const latest = rounds.length > 0 ? rounds[rounds.length - 1] : null;
-  if (!latest) return false;
-  if (latest.value !== undefined && latest.value !== null) return true;
-  if (
-    latest.displayValue !== undefined &&
-    latest.displayValue !== null &&
-    latest.displayValue !== ""
-  ) {
-    return true;
+  const forPeriod = linescoreForPeriod(rounds, eventPeriod);
+  if (forPeriod) {
+    return roundHasLiveActivity(forPeriod);
   }
-  const holes = (latest as { linescores?: unknown[] }).linescores;
-  return Array.isArray(holes) && holes.length > 0;
+
+  const last = rounds.length > 0 ? rounds[rounds.length - 1] : null;
+  if (last && !isBarePeriodPlaceholder(last)) {
+    return roundHasLiveActivity(last);
+  }
+  if (rounds.length >= 2) {
+    const prev = rounds[rounds.length - 2];
+    return prev ? roundHasLiveActivity(prev) : false;
+  }
+  return false;
 }
 
-function inferStatusFromEspn(competitor: EspnCompetitor): GolferStatus {
+function inferStatusFromEspn(competitor: EspnCompetitor, eventPeriod: number | null): GolferStatus {
   const status = competitor.status;
   const positionDisplay = status?.position?.displayName ?? null;
   const fromPosition = inferStatusFromPositionDisplay(positionDisplay);
@@ -111,7 +165,7 @@ function inferStatusFromEspn(competitor: EspnCompetitor): GolferStatus {
     return "not_started";
   }
 
-  if (!hasStartedCurrentRound(competitor)) {
+  if (!hasStartedCurrentRound(competitor, eventPeriod)) {
     return "not_started";
   }
 
@@ -124,12 +178,13 @@ function formatPositionDisplay(position: number, isTie: boolean): string {
 
 function computeLeaderboardPositions(
   competitors: EspnCompetitor[],
+  eventPeriod: number | null,
 ): Map<string, { position: number; positionDisplay: string }> {
   const active = competitors
     .map((competitor) => {
       const name = competitor.athlete?.displayName ?? competitor.athlete?.fullName;
       if (!name) return null;
-      const status = inferStatusFromEspn(competitor);
+      const status = inferStatusFromEspn(competitor, eventPeriod);
       if (status === "cut" || status === "wd" || status === "dq") return null;
       const scoreToPar = parseScoreToPar(competitor.score);
       if (scoreToPar === null) return null;
@@ -163,13 +218,14 @@ function computeLeaderboardPositions(
 function mapCompetitor(
   competitor: EspnCompetitor,
   positions: Map<string, { position: number; positionDisplay: string }>,
+  eventPeriod: number | null,
 ): LiveGolferRow {
   const name =
     competitor.athlete?.displayName ??
     competitor.athlete?.fullName ??
     "Unknown";
   const id = competitor.id ?? name;
-  const status = inferStatusFromEspn(competitor);
+  const status = inferStatusFromEspn(competitor, eventPeriod);
   const positionInfo = positions.get(id);
   const espnPosition = competitor.status?.position?.displayName ?? null;
   const parsedEspnPosition =
@@ -193,7 +249,8 @@ function mapCompetitor(
           : (positionInfo?.positionDisplay ?? espnPosition ?? null);
 
   const rounds = competitor.linescores ?? [];
-  const currentRound = rounds.length > 0 ? rounds[rounds.length - 1] : null;
+  const eventRound = linescoreForPeriod(rounds, eventPeriod);
+  const today = parseRoundRelativeToPar(eventRound?.displayValue);
 
   return {
     espnId: competitor.id ?? null,
@@ -202,9 +259,9 @@ function mapCompetitor(
     positionDisplay,
     status,
     scoreToPar: parseScoreToPar(competitor.score),
-    today: currentRound?.value ?? null,
+    today,
     thru: competitor.status?.thru ?? null,
-    round: rounds.length > 0 ? rounds.length : null,
+    round: eventPeriod ?? (rounds.length > 0 ? rounds.length : null),
   };
 }
 
@@ -247,11 +304,12 @@ async function enrichStatuses(
   eventId: string,
   competitors: EspnCompetitor[],
   pickedIds: Set<string>,
+  eventPeriod: number | null,
 ): Promise<EspnCompetitor[]> {
   const needsEnrichment = competitors.some((competitor) => {
     if (!pickedIds.has(competitor.id ?? "")) return false;
     if (competitor.status?.position?.displayName) return false;
-    const status = inferStatusFromEspn(competitor);
+    const status = inferStatusFromEspn(competitor, eventPeriod);
     return status !== "cut" && status !== "wd" && status !== "dq";
   });
 
@@ -289,6 +347,7 @@ export async function fetchLiveLeaderboard(
     throw new Error("ESPN scoreboard returned no active PGA tournament");
   }
 
+  const eventPeriod = currentEventPeriod(event);
   let competitors = event.competitions[0].competitors;
   const eventId = event.id;
 
@@ -307,13 +366,13 @@ export async function fetchLiveLeaderboard(
     );
 
     if (pickedIds.size > 0) {
-      competitors = await enrichStatuses(eventId, competitors, pickedIds);
+      competitors = await enrichStatuses(eventId, competitors, pickedIds, eventPeriod);
     }
   }
 
-  const positions = computeLeaderboardPositions(competitors);
+  const positions = computeLeaderboardPositions(competitors, eventPeriod);
   const golfers = competitors.map((competitor) =>
-    mapCompetitor(competitor, positions),
+    mapCompetitor(competitor, positions, eventPeriod),
   );
 
   const fetchedAt = Date.now();
