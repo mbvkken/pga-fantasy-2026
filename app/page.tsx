@@ -14,6 +14,9 @@ export default async function HomePage() {
         subtitle="Tap a player to see their 7 picks and live stats. Top 3 are on the podium."
       />
       <LeaderboardClient initialData={leaderboard} />
+      <footer className="mt-10 border-t border-emerald-900/30 pt-6 text-center text-sm text-emerald-200/50">
+        © {new Date().getFullYear()} Mathias Bakken
+      </footer>
     </main>
   );
 }
