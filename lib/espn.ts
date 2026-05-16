@@ -84,6 +84,37 @@ function roundHasLiveActivity(round: EspnLinescoreRound): boolean {
   return dv.length > 0 && dv !== "-";
 }
 
+const roundIsComplete = roundHasLiveActivity;
+
+/** Advancing players get a linescore row for the next round; missed-cut players do not. */
+function hasNextRoundSlot(
+  rounds: EspnLinescoreRound[],
+  eventPeriod: number,
+): boolean {
+  return rounds.some((r) => r.period === eventPeriod + 1);
+}
+
+/**
+ * ESPN's main scoreboard omits status for most players. After a cut, MC players
+ * have only completed rows for rounds 1..N and no placeholder for round N+1.
+ */
+function inferMissedCutFromLinescores(
+  competitor: EspnCompetitor,
+  eventPeriod: number | null,
+): boolean {
+  if (!eventPeriod || eventPeriod < 2) return false;
+
+  const rounds = competitor.linescores ?? [];
+  if (hasNextRoundSlot(rounds, eventPeriod)) return false;
+
+  for (let period = 1; period <= eventPeriod; period += 1) {
+    const round = linescoreForPeriod(rounds, period);
+    if (!round || !roundIsComplete(round)) return false;
+  }
+
+  return rounds.length === eventPeriod;
+}
+
 function parseRoundRelativeToPar(displayValue: string | undefined): number | null {
   const raw = String(displayValue ?? "").trim();
   if (!raw || raw === "-" || raw === "—") return null;
@@ -142,14 +173,20 @@ function inferStatusFromEspn(competitor: EspnCompetitor, eventPeriod: number | n
   const typeName = status?.type?.name?.toLowerCase() ?? "";
   const typeDesc = status?.type?.description?.toLowerCase() ?? "";
   const typeState = status?.type?.state?.toLowerCase() ?? "";
+  const scoreRaw = String(competitor.score ?? "").trim().toUpperCase();
   const display = (status?.displayValue ?? competitor.score ?? "").toUpperCase();
 
   if (
     typeName.includes("cut") ||
     typeDesc.includes("cut") ||
+    scoreRaw === "CUT" ||
+    scoreRaw === "MC" ||
     display === "CUT" ||
     display === "MC"
   ) {
+    return "cut";
+  }
+  if (inferMissedCutFromLinescores(competitor, eventPeriod)) {
     return "cut";
   }
   if (typeName.includes("withdraw") || display === "WD") return "wd";
@@ -303,31 +340,27 @@ async function enrichCompetitorStatus(
 async function enrichStatuses(
   eventId: string,
   competitors: EspnCompetitor[],
-  pickedIds: Set<string>,
-  eventPeriod: number | null,
 ): Promise<EspnCompetitor[]> {
-  const needsEnrichment = competitors.some((competitor) => {
-    if (!pickedIds.has(competitor.id ?? "")) return false;
-    if (competitor.status?.position?.displayName) return false;
-    const status = inferStatusFromEspn(competitor, eventPeriod);
-    return status !== "cut" && status !== "wd" && status !== "dq";
-  });
+  const needsStatus = competitors.filter(
+    (competitor) => competitor.id && !competitor.status?.type?.name,
+  );
+  if (needsStatus.length === 0) return competitors;
 
-  if (!needsEnrichment) return competitors;
-
-  const chunkSize = 20;
+  const chunkSize = 30;
   const enriched = [...competitors];
+  const indexById = new Map(
+    competitors.map((competitor, index) => [competitor.id ?? "", index]),
+  );
 
-  for (let i = 0; i < enriched.length; i += chunkSize) {
-    const chunk = enriched.slice(i, i + chunkSize);
+  for (let i = 0; i < needsStatus.length; i += chunkSize) {
+    const chunk = needsStatus.slice(i, i + chunkSize);
     const updated = await Promise.all(
-      chunk.map((competitor) =>
-        pickedIds.has(competitor.id ?? "")
-          ? enrichCompetitorStatus(eventId, competitor)
-          : Promise.resolve(competitor),
-      ),
+      chunk.map((competitor) => enrichCompetitorStatus(eventId, competitor)),
     );
-    enriched.splice(i, updated.length, ...updated);
+    for (const competitor of updated) {
+      const index = indexById.get(competitor.id ?? "");
+      if (index !== undefined) enriched[index] = competitor;
+    }
   }
 
   return enriched;
@@ -352,22 +385,7 @@ export async function fetchLiveLeaderboard(
   const eventId = event.id;
 
   if (eventId) {
-    const pickedNames = new Set(
-      allPickedGolferNames().map((name) => normalizeNameKey(name)),
-    );
-    const pickedIds = new Set(
-      competitors
-        .filter((competitor) => {
-          const name = competitor.athlete?.displayName ?? "";
-          return pickedNames.has(normalizeNameKey(name));
-        })
-        .map((competitor) => competitor.id ?? "")
-        .filter(Boolean),
-    );
-
-    if (pickedIds.size > 0) {
-      competitors = await enrichStatuses(eventId, competitors, pickedIds, eventPeriod);
-    }
+    competitors = await enrichStatuses(eventId, competitors);
   }
 
   const positions = computeLeaderboardPositions(competitors, eventPeriod);
