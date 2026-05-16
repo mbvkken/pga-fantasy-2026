@@ -7,7 +7,7 @@ import { LeaderboardMeta, LeaderboardTable } from "./LeaderboardTable";
 import { TournamentLeaderboard } from "./TournamentLeaderboard";
 
 const RULES_TEXT =
-  "Lower points wins. Best 5 of 7 golfers count. Missed cut, WD, DQ, or worse than 67th place = 75 points. Leaderboard updates every 30 seconds.";
+  "Lower points wins. Best 5 of 7 golfers count. Points = finish position (T68 → 68). Missed cut, WD, or DQ = 75 points. Leaderboard updates every 30 seconds.";
 
 type TabId = "fantasy" | "tournament";
 
