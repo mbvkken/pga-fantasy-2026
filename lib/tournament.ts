@@ -14,12 +14,18 @@ export function sortTournamentField(golfers: LiveGolferRow[]): LiveGolferRow[] {
     const bPos = b.position ?? 9999;
     if (aPos !== bPos) return aPos - bPos;
 
+    // Ties and missed-cut field: sort by total score (ESPN has no position for MC).
+    const aScore = a.scoreToPar ?? 99999;
+    const bScore = b.scoreToPar ?? 99999;
+    if (aScore !== bScore) return aScore - bScore;
+
     return a.name.localeCompare(b.name);
   });
 }
 
 export function formatTournamentPosition(row: LiveGolferRow): string {
-  if (row.status === "cut" || row.status === "wd" || row.status === "dq") {
+  if (row.status === "cut") return "MC";
+  if (row.status === "wd" || row.status === "dq") {
     return row.status.toUpperCase();
   }
   return row.positionDisplay ?? (row.position !== null ? String(row.position) : "—");
