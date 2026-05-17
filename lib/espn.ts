@@ -95,8 +95,10 @@ function hasNextRoundSlot(
 }
 
 /**
- * ESPN's main scoreboard omits status for most players. After a cut, MC players
- * have only completed rows for rounds 1..N and no placeholder for round N+1.
+ * Fallback when ESPN's per-player status API is missing. Missed-cut players stop
+ * accumulating round rows while the field advances (e.g. 2 rounds on file when
+ * the tournament is in round 4). Do not use `rounds.length === eventPeriod` —
+ * that matches everyone in the final round, who also have no next-round slot.
  */
 function inferMissedCutFromLinescores(
   competitor: EspnCompetitor,
@@ -104,15 +106,24 @@ function inferMissedCutFromLinescores(
 ): boolean {
   if (!eventPeriod || eventPeriod < 2) return false;
 
+  const typeName = competitor.status?.type?.name?.toLowerCase() ?? "";
+  if (typeName && !typeName.includes("cut")) return false;
+
   const rounds = competitor.linescores ?? [];
+  const maxPeriod = rounds.reduce(
+    (max, round) => Math.max(max, round.period ?? 0),
+    0,
+  );
+
+  if (maxPeriod >= eventPeriod) return false;
   if (hasNextRoundSlot(rounds, eventPeriod)) return false;
 
-  for (let period = 1; period <= eventPeriod; period += 1) {
+  for (let period = 1; period <= maxPeriod; period += 1) {
     const round = linescoreForPeriod(rounds, period);
     if (!round || !roundIsComplete(round)) return false;
   }
 
-  return rounds.length === eventPeriod;
+  return maxPeriod > 0 && maxPeriod < eventPeriod;
 }
 
 function parseRoundRelativeToPar(displayValue: string | undefined): number | null {
@@ -186,9 +197,6 @@ function inferStatusFromEspn(competitor: EspnCompetitor, eventPeriod: number | n
   ) {
     return "cut";
   }
-  if (inferMissedCutFromLinescores(competitor, eventPeriod)) {
-    return "cut";
-  }
   if (typeName.includes("withdraw") || display === "WD") return "wd";
   if (typeName.includes("disqual") || display === "DQ") return "dq";
   if (typeName.includes("complete") || typeName.includes("finished")) {
@@ -200,6 +208,12 @@ function inferStatusFromEspn(competitor: EspnCompetitor, eventPeriod: number | n
     typeName.includes("pre")
   ) {
     return "not_started";
+  }
+  if (typeName.includes("in_progress")) {
+    return "active";
+  }
+  if (inferMissedCutFromLinescores(competitor, eventPeriod)) {
+    return "cut";
   }
 
   if (!hasStartedCurrentRound(competitor, eventPeriod)) {
